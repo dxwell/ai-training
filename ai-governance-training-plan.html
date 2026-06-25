@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Governance Training Plan</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f5f4f0;
+    --mid: #e8e6e0;
+    --rule: #c8c4bc;
+    --accent: #c0392b;
+    --accent-soft: #fdf0ee;
+    --teal: #1a6b6b;
+    --teal-soft: #eef5f5;
+    --amber: #b8860b;
+    --amber-soft: #fdf8ec;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 3px solid var(--ink);
+    padding: 32px 40px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+  }
+
+  .header-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .header-meta {
+    text-align: right;
+  }
+
+  .meta-pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4px 10px;
+    margin-bottom: 4px;
+  }
+
+  .meta-row {
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+  }
+
+  /* TABS */
+  .tab-bar {
+    display: flex;
+    border-bottom: 2px solid var(--rule);
+    background: var(--paper);
+    padding: 0 40px;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .tab {
+    font-family: var(--mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 14px 20px 12px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    color: #888;
+    transition: color 0.15s, border-color 0.15s;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* CONTENT PANELS */
+  .panel { display: none; padding: 36px 40px 60px; }
+  .panel.active { display: block; }
+
+  /* TIMELINE */
+  .timeline {
+    display: grid;
+    gap: 0;
+    max-width: 860px;
+  }
+
+  .segment {
+    display: grid;
+    grid-template-columns: 80px 3px 1fr;
+    gap: 0 20px;
+    position: relative;
+  }
+
+  .seg-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #888;
+    padding-top: 18px;
+    text-align: right;
+  }
+
+  .seg-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .seg-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--ink);
+    flex-shrink: 0;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .seg-dot.demo { background: var(--teal); }
+  .seg-dot.activity { background: var(--accent); }
+  .seg-dot.break-dot { background: var(--rule); }
+
+  .seg-track {
+    width: 3px;
+    flex: 1;
+    background: var(--rule);
+    margin-top: 2px;
+  }
+
+  .segment:last-child .seg-track { display: none; }
+
+  .seg-body {
+    padding: 14px 0 24px;
+  }
+
+  .seg-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 2px 8px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .tag-setup { background: var(--mid); color: #555; }
+  .tag-demo { background: var(--teal-soft); color: var(--teal); border: 1px solid var(--teal); }
+  .tag-activity { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .tag-debrief { background: var(--amber-soft); color: var(--amber); border: 1px solid var(--amber); }
+  .tag-break { background: var(--mid); color: #999; }
+
+  .seg-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .seg-desc {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  .seg-detail {
+    font-size: 13px;
+    background: var(--mid);
+    border-left: 3px solid var(--rule);
+    padding: 10px 14px;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .seg-detail strong { color: var(--ink); font-weight: 600; }
+
+  /* DEMO & ACTIVITY CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+  }
+
+  .card {
+    border: 1px solid var(--rule);
+    padding: 22px;
+    background: white;
+    position: relative;
+  }
+
+  .card-number {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--rule);
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .card-scenario {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--teal);
+    margin-bottom: 10px;
+    border-left: 2px solid var(--teal);
+    padding-left: 10px;
+    line-height: 1.5;
+  }
+
+  .card-body {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .card-steps {
+    margin-top: 10px;
+    padding-left: 16px;
+  }
+
+  .card-steps li {
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 4px;
+  }
+
+  .card-outcome {
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .card-outcome span { color: var(--ink); text-transform: none; font-family: var(--sans); font-size: 12px; }
+
+  /* MATERIALS SECTION */
+  .materials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    max-width: 860px;
+    margin-top: 8px;
+  }
+
+  .mat-card {
+    border: 1px solid var(--rule);
+    padding: 18px 20px;
+    background: white;
+  }
+
+  .mat-type {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .mat-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .mat-desc {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.55;
+  }
+
+  /* LEARNING OUTCOMES */
+  .outcomes-list {
+    max-width: 680px;
+    display: grid;
+    gap: 12px;
+  }
+
+  .outcome-row {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 14px;
+    align-start: start;
+    padding: 14px 16px;
+    background: white;
+    border: 1px solid var(--rule);
+  }
+
+  .outcome-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    padding-top: 1px;
+  }
+
+  .outcome-text {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .outcome-text strong { font-weight: 600; }
+
+  /* SECTION HEADING */
+  .section-heading {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  .panel-intro {
+    font-size: 15px;
+    color: #444;
+    max-width: 620px;
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #555;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    header { padding: 20px; grid-template-columns: 1fr; }
+    .header-meta { text-align: left; }
+    .panel { padding: 24px 20px 48px; }
+    .tab-bar { padding: 0 20px; overflow-x: auto; }
+    .tab { padding: 14px 14px 12px; font-size: 11px; }
+    h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="header-eyebrow">Actuarial Function · AI Governance Series</div>
+    <h1>AI Model Validation &amp;<br>Governance Frameworks</h1>
+  </div>
+  <div class="header-meta">
+    <div class="meta-pill">Lunch-and-Learn · 90 min</div>
+    <div class="meta-row">Audience: Actuarial + Risk/Compliance<br>Market: Australian Insurance</div>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('overview')">Overview</div>
+  <div class="tab" onclick="showTab('schedule')">Schedule</div>
+  <div class="tab" onclick="showTab('demos')">Demonstrations</div>
+  <div class="tab" onclick="showTab('activities')">Activities</div>
+  <div class="tab" onclick="showTab('materials')">Materials</div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="panel active" id="tab-overview">
+  <div class="section-heading">About This Training</div>
+  <p class="panel-intro">
+    A 90-minute hands-on session that teaches mixed actuarial and risk/compliance teams how to validate AI models and apply governance frameworks — grounded in Australian regulatory context and real insurance scenarios. Every concept is shown before it is explained.
+  </p>
+
+  <div class="section-heading" style="margin-top:36px;">Learning Outcomes</div>
+  <div class="outcomes-list">
+    <div class="outcome-row">
+      <div class="outcome-num">01</div>
+      <div class="outcome-text"><strong>Identify the three failure modes</strong> of AI models in actuarial work — data drift, proxy discrimination, and opacity — and recognise them in a live example.</div>
+    </div>
+    <div class="outcome-row">
+      <div class="outcome-num">02</div>
+      <div class="outcome-text"><strong>Apply APRA CPG 234 and the Actuaries Institute AI guidance</strong> to a model validation checklist for a pricing or reserving use case.</div>
+    </div>
+    <div class="outcome-row">
+      <div class="outcome-num">03</div>
+      <div class="outcome-text"><strong>Distinguish model risk levels</strong> using a simple tiering framework and assign appropriate validation requirements to each tier.</div>
+    </div>
+    <div class="outcome-row">
+      <div class="outcome-num">04</div>
+      <div class="outcome-text"><strong>Write a model risk finding</strong> in plain language that satisfies both the Appointed Actuary and the CRO — without actuarial jargon on one hand or vague risk-speak on the other.</div>
+    </div>
+    <div class="outcome-row">
+      <div class="outcome-num">05</div>
+      <div class="outcome-text"><strong>Understand where each discipline fits</strong> — actuaries, risk, and compliance — in the three lines of defence for AI governance.</div>
+    </div>
+  </div>
+
+  <div class="section-heading" style="margin-top:36px;">Design Principles</div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">Show First, Explain Second</div>
+      <div class="card-body">Every concept begins with a live demonstration or a concrete case before the framework is named. Participants see the problem before they see the solution.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Australian Insurance Context</div>
+      <div class="card-body">All examples use Australian data, APRA/ASIC regulatory anchors, and scenarios from general, life, or health insurance — not generic ML examples.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Two Disciplines, One Room</div>
+      <div class="card-body">Activities are structured so actuaries and risk/compliance professionals each bring distinct expertise. Neither group can complete the task alone.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE -->
+<div class="panel" id="tab-schedule">
+  <div class="section-heading">90-Minute Run Sheet</div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#1a1a2e"></div> Setup / Framing</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1a6b6b"></div> Demonstration</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c0392b"></div> Participant Activity</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#b8860b"></div> Debrief / Discussion</div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="segment">
+      <div class="seg-time">0:00</div>
+      <div class="seg-line"><div class="seg-dot"></div><div class="seg-track"></div></div>
+      <div class="seg-body">
+        <span class="seg-tag tag-setup">Setup</span>
+        <div class="seg-title">The Burning Platform (5 min)</div>
+        <div class="seg-desc">Facilitator opens with a real-world AI model failure in Australian insurance — no slides, just a story. Participants are asked: "Who was responsible? How would you have caught it?"</div>
+        <div class="seg-detail"><strong>Anchor case:</strong> A motor insurer's gradient boosting pricing model silently degraded after COVID lockdowns changed driving patterns. Premiums diverged from actual risk by 18% before discovery. The model passed its original validation — but nobody owned ongoing monitoring.</div>
+      </div>
+    </div>
+
+    <div class="segment">
+      <div class="seg-time">0:05</div>
+      <div class="seg-line"><div class="seg-dot demo"></div><div class="seg-track"></div></div>
+      <div class="seg-body">
+        <span class="seg-tag tag-demo">Demo 1</span>
+        <div class="seg-title">What Model Failure Looks Like (15 min)</div>
+        <div class="seg-desc">Facilitator runs a live demonstration using a simplified claims frequency model. Participants watch as the model is fed post-COVID data and its outputs silently break — while looking perfectly healthy on standard metrics.</div>
+        <div class="seg-detail"><strong>Tool used:</strong> Python notebook projected live (or pre-run with outputs visible). Demonstrates: (1) data drift detection, (2) Gini coefficient staying stable while predictions deteriorate, (3) a calibration plot that reveals the hidden problem. No coding required from participants.</div>
+      </div>
+    </div>
+
+    <div class="segment">
+      <div class="seg-time">0:20</div>
+      <div class="seg-line"><div class="seg-dot"></div><div class="seg-track"></div></div>
+      <div class="seg-body">
+        <span class="seg-tag tag-setup">Framework</span>
+        <div class="seg-title">The Governance Landscape in 5 Minutes (5 min)</div>
+        <div class="seg-desc">A single reference slide maps the terrain: APRA CPG 234, Actuaries Institute AI guidance (2023), ASIC expectations on algorithmic decision-making, and where the three lines of defence sit in relation to AI models.</div>
+        <div class="seg-detail"><strong>Key point:</strong> Governance frameworks don't tell you if a model is good — they tell you who is responsible for checking, and what evidence they must produce. The actuarial and risk functions have different mandates, both are necessary.</div>
+      </div>
+    </div>
+
+    <div class="segment">
+      <div class="seg-time">0:25</div>
+      <div class="seg-line"><div class="seg-dot demo"></div><div class="seg-track"></div></div>
+      <div class="seg-body">
+        <span class="seg-tag tag-demo">Demo 2</span>
+        <div class="seg-title">Tiering a Model — Live Walk-Through (10 min)</div>
+        <div class="seg-desc">Facilitator applies a three-tier model risk framework to three real actuarial AI use cases in real time, talking through the reasoning out loud. Participants call out factors they think matter.</div>
+        <div class="seg-detail"><strong>Three cases shown:</strong><br>• A GPT-powered policy wording summariser (Tier 1 — low)<br>• An ML claims triage model routing claims to fast-track (Tier 2 — medium)<br>• A neural net reserving model used in the APRA Liability return (Tier 3 — high)<br><br><strong>Tiering criteria covered:</strong> regulatory materiality, consumer impact, model replaceability, data sensitivity, interpretability.</div>
+      </div>
+    </div>
+
+    <div class="segment">
+      <div class="seg-time">0:35</div>
+      <div class="seg-line"><div class="seg-dot activity"></div><div class="seg-track"></div></div>
+      <div class="seg-body">
+        <span class="seg-tag tag-activity">Activity 1</span>
+        <div class="seg-title">Tier It Yourself (15 min)</div>
+        <div class="seg-desc">Mixed groups of 3–4 (at least one actuary + one risk/compliance per group) receive a one-page model description and must agree on a tier, list three validation requirements, and identify who owns each requirement.</div>
+        <div class="seg-detail"><strong>Case assigned:</strong> A life insurer's ML-driven lapse propensity model used to trigger retention offers — feeding into assumptions used in the EV calculation.<br><br><strong>Deliverable:</strong> Groups fill in a pre-printed "Model Risk Card" (one per group). No laptops needed — pen and paper.</div>
+      </div>
+    </div>
+
+    <div class="segment">
+      <div class="seg-time">0:50</div>
+      <div class="seg-line"><div class="seg-dot" style="background:#b8860b"></div><div class="seg-track"></div></div>
+      <div class="seg-body">
+        <span class="seg-tag tag-debrief">Debrief</span>
+        <div class="seg-title">Tier Reveal + Discussion (10 min)</div>
+        <div class="seg-desc">Groups share their tier and one surprising disagreement from within the group. Facilitator reveals the "reference answer" and unpacks where actuarial and risk perspectives typically diverge — and why both are valid.</div>
+        <div class="seg-detail"><strong>Discussion prompt:</strong> "Your group probably disagreed about whether the EV link makes this Tier 2 or Tier 3. Let's talk about that — because regulators will ask the same question."</div>
+      </div>
+    </div>
+
+    <div class="segment">
+      <div class="seg-time">1:00</div>
+      <div class="seg-line"><div class="seg-dot activity"></div><div class="seg-track"></div></div>
+      <div class="seg-body">
+        <span class="seg-tag tag-activity">Activity 2</span>
+        <div class="seg-title">Write the Finding (20 min)</div>
+        <div class="seg-desc">Same groups receive a pre-filled model validation report with three "issues" buried in technical language. They must: (1) identify the material issue, (2) rewrite it as a governance finding, (3) assign a risk rating and owner.</div>
+        <div class="seg-detail"><strong>Format provided:</strong> A structured finding template — Issue / Evidence / Risk Rating / Recommended Action / Owner / Due Date.<br><br><strong>Constraint:</strong> The finding must be readable by both the Appointed Actuary and the CRO without a translation layer. Actuaries in the group must resist over-specifying; risk professionals must resist being vague.</div>
+      </div>
+    </div>
+
+    <div class="segment">
+      <div class="seg-time">1:20</div>
+      <div class="seg-line"><div class="seg-dot" style="background:#b8860b"></div><div class="seg-track"></div></div>
+      <div class="seg-body">
+        <span class="seg-tag tag-debrief">Close</span>
+        <div class="seg-title">Findings Swap + Wrap-Up (10 min)</div>
+        <div class="seg-desc">Groups swap their written findings with another group for a 90-second peer review: "Would your CRO understand this? Would your Appointed Actuary trust it?" Then one group reads theirs aloud.</div>
+        <div class="seg-detail"><strong>Facilitator close:</strong> Three things to take back to your desk today — (1) the tiering criteria, (2) the finding template, (3) the question: who in your organisation owns AI model monitoring after go-live?</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DEMONSTRATIONS -->
+<div class="panel" id="tab-demos">
+  <div class="section-heading">Facilitator Demonstrations</div>
+  <p class="panel-intro">Both demonstrations are designed to be run live, with the facilitator narrating their reasoning. Participants observe — they do not need computers for these segments.</p>
+
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-number">DEMO 01 · 15 MIN</div>
+      <div class="card-title">When a Healthy Model Goes Wrong</div>
+      <div class="card-scenario">"The Gini looks fine. The model passed validation. Why are we losing money on motor?"</div>
+      <div class="card-body">
+        A pre-built Python notebook simulates a motor claims frequency model trained on 2019 data. The facilitator feeds it 2022 data (post-COVID urban driving patterns) and runs three diagnostics live.
+      </div>
+      <ol class="card-steps">
+        <li>Show Gini coefficient — still 0.41, looks fine</li>
+        <li>Show calibration plot — actual vs predicted diverging badly by distance band</li>
+        <li>Show Population Stability Index — PSI &gt; 0.25 flagging distribution shift</li>
+        <li>Ask: "Which of these three is the real governance trigger?"</li>
+      </ol>
+      <div class="card-outcome">Key insight: <span>A model can pass its validation metrics and still be materially wrong. Governance requires ongoing monitoring, not just point-in-time sign-off.</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-number">DEMO 02 · 10 MIN</div>
+      <div class="card-title">Tiering Three Models in Real Time</div>
+      <div class="card-scenario">"Should the same validation standard apply to a chatbot and a reserving model?"</div>
+      <div class="card-body">
+        Facilitator projects a blank tiering matrix and populates it live, asking participants to call out factors. Three Australian insurance AI use cases are worked through in sequence.
+      </div>
+      <ol class="card-steps">
+        <li>GPT policy summariser — quick group vote, discuss why it's Tier 1</li>
+        <li>ML claims triage — introduce consumer impact and replaceability as Tier 2 drivers</li>
+        <li>Neural net reserving model — APRA materiality, Tier 3 requirements explained</li>
+      </ol>
+      <div class="card-outcome">Key insight: <span>Tier determines validation depth, sign-off authority, and monitoring frequency — not just who reviews the model documentation.</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ACTIVITIES -->
+<div class="panel" id="tab-activities">
+  <div class="section-heading">Participant Activities</div>
+  <p class="panel-intro">Both activities are designed for mixed groups of 3–4. Each group must include at least one actuary and one risk or compliance professional. Activities are deliberately impossible to complete well with only one discipline.</p>
+
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-number">ACTIVITY 01 · 15 MIN</div>
+      <div class="card-title">Tier the Lapse Model</div>
+      <div class="card-scenario">Your life insurer has built an ML model predicting which policyholders are likely to lapse in the next 90 days. Retention teams use its output to trigger proactive calls and offers. The model's predictions also feed into the lapse assumption used in the embedded value (EV) calculation.</div>
+      <div class="card-body">Groups receive a one-page model description and a blank Model Risk Card. They must reach consensus on three things:
+      </div>
+      <ol class="card-steps">
+        <li>Assign a tier (1, 2, or 3) with written justification</li>
+        <li>List three specific validation requirements for that tier</li>
+        <li>Name the owner of each requirement (actuary / risk / compliance / IT)</li>
+      </ol>
+      <div class="card-outcome">Deliberate tension: <span>The EV link arguably makes this Tier 3. The retail contact trigger arguably makes it Tier 2. Groups must argue this out — there is no clean answer.</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-number">ACTIVITY 02 · 20 MIN</div>
+      <div class="card-title">Write the Governance Finding</div>
+      <div class="card-scenario">You have reviewed a model validation report for a health insurer's ML-based hospital admission predictor used in group pricing. The report is technically thorough but buries three issues in statistical language. One of them is material.</div>
+      <div class="card-body">Groups receive a two-page excerpt from a fictional validation report. They must:
+      </div>
+      <ol class="card-steps">
+        <li>Identify which of the three flagged issues is the material governance finding</li>
+        <li>Rewrite it using the provided Finding Template (Issue / Evidence / Risk Rating / Action / Owner / Due Date)</li>
+        <li>Assign a risk rating: Low / Medium / High / Critical</li>
+        <li>Swap with another group — peer review in 90 seconds</li>
+      </ol>
+      <div class="card-outcome">The buried issue: <span>The model was validated on claims data from large employers only, but is now being applied to SME groups — a population materially outside the training distribution.</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MATERIALS -->
+<div class="panel" id="tab-materials">
+  <div class="section-heading">Materials Checklist</div>
+  <p class="panel-intro">All participant materials are designed to be useful after the session ends — they should go back to desks, not into recycling bins.</p>
+
+  <div class="materials-grid">
+
+    <div class="mat-card">
+      <div class="mat-type">Pre-read · Optional · 5 min</div>
+      <div class="mat-title">One-Page Regulatory Map</div>
+      <div class="mat-desc">A visual summary of APRA CPG 234, Actuaries Institute AI guidance (2023), and ASIC RG 271 — showing which obligations apply to AI models in the actuarial function specifically.</div>
+    </div>
+
+    <div class="mat-card">
+      <div class="mat-type">Handout · Activity 1</div>
+      <div class="mat-title">Lapse Model Description</div>
+      <div class="mat-desc">One-page fictional model summary: training data, algorithm type, outputs, downstream uses, validation history, and known limitations. Written in plain language — no code.</div>
+    </div>
+
+    <div class="mat-card">
+      <div class="mat-type">Handout · Activity 1</div>
+      <div class="mat-title">Model Risk Card (blank)</div>
+      <div class="mat-desc">A structured A5 card: Tier selection with justification box, three validation requirement rows with owner column, and a "who signs off?" field. Pre-printed, one per group.</div>
+    </div>
+
+    <div class="mat-card">
+      <div class="mat-type">Handout · Activity 2</div>
+      <div class="mat-title">Fictional Validation Report Excerpt</div>
+      <div class="mat-desc">Two pages from a fictional model validation report. Three issues are flagged in technical language. One is the material governance finding; two are statistical observations that are less critical.</div>
+    </div>
+
+    <div class="mat-card">
+      <div class="mat-type">Handout · Activity 2</div>
+      <div class="mat-title">Governance Finding Template</div>
+      <div class="mat-desc">Structured template: Issue summary / Supporting evidence / Risk rating / Recommended action / Responsible owner / Due date / Escalation trigger. Formatted to match common Australian insurer risk frameworks.</div>
+    </div>
+
+    <div class="mat-card">
+      <div class="mat-type">Take-Home · All participants</div>
+      <div class="mat-title">AI Model Tiering Quick Reference</div>
+      <div class="mat-desc">Laminated A5 card: the three-tier framework with criteria, typical validation requirements per tier, and sign-off authority guidelines. Designed to sit on a desk, not in a folder.</div>
+    </div>
+
+    <div class="mat-card">
+      <div class="mat-type">Facilitator · Demo 1</div>
+      <div class="mat-title">Python Notebook (pre-run)</div>
+      <div class="mat-desc">Jupyter notebook with synthetic motor claims data. Outputs pre-generated so the demo runs even without a live Python environment. Includes Gini chart, calibration plot, and PSI calculation.</div>
+    </div>
+
+    <div class="mat-card">
+      <div class="mat-type">Facilitator · Demo 2</div>
+      <div class="mat-title">Tiering Matrix (blank + completed)</div>
+      <div class="mat-desc">A projected slide with a blank matrix for live population during Demo 2, plus a completed reference version the facilitator reveals after participant input.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
